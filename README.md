@@ -47,3 +47,15 @@ npm run preview
 ## License
 
 MIT — see repository for details if present; otherwise hackathon demo source shared as-is for judging.
+
+## Meta model integration evidence
+
+Local smoke on 2026-10-27 (Asia/Seoul) against `https://api.meta.ai/v1` with a **local** API key (not in this repo or the pages.dev build):
+
+| Stage | Model | Result |
+| --- | --- | --- |
+| Segment | `sam-3.1` | OK — box + one_bit mask on sample mug |
+| Variants | `muse-image-1.0` | OK — `images.edit` studio PNG |
+| Copy | `muse-spark-1.3` | OK — SEO title + description JSON |
+
+`models.list` returned the three required model ids. Full redacted log: [`PIPELINE-EVIDENCE.md`](./PIPELINE-EVIDENCE.md) (also mirrored under the hackathon Drive folder when updated). Public demo remains keyless mock; paste a key in the header only in your own browser to run Live.

@@ -170,13 +170,12 @@ export async function segmentProduct(
   requireBudget(ESTIMATE_USD.segment)
 
   const imageUrl = await blobToDataUrl(file)
+  // SAM 3.1 rejects instruction/user text that embeds <|...|> token templates (HTTP 400).
+  // Noun-phrase subject + mask_encoding metadata is enough; model returns box/mask tokens.
   const response = await metaClient().responses.create({
     model: MODELS.segment,
     instructions:
-      'You localize products in photos. Return one <|box;x1=..;y1=..;x2=..;y2=..;w=..;h=..|> ' +
-      'and one <|mask;data=H,W,<payload>|> pair per matching instance, using one_bit mask ' +
-      'encoding. Coordinates are pixels in the input image. Return only those tokens, no prose. ' +
-      'Write in English.',
+      'Segment the requested product in the photo. Return box and one_bit mask tokens only. No prose.',
     input: [
       {
         type: 'message',
@@ -184,7 +183,7 @@ export async function segmentProduct(
         content: [
           {
             type: 'input_text',
-            text: `Find every instance of this product: ${subject}. Return the box and mask tokens.`,
+            text: subject.trim() || 'product',
           },
           { type: 'input_image', image_url: imageUrl, detail: 'high' },
         ],
